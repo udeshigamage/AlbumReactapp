@@ -1,0 +1,54 @@
+{
+  "albums": [
+    {
+      "id": "1",
+      "name": "Vacation",
+      "date": "2024-12-01"
+    },
+    {
+      "id": "2",
+      "name": "Birthday",
+      "date": "2025-01-10"
+    },
+    {
+      "id": "b425",
+      "albumname": "album23",
+      "title": "no`",
+      "date": "1999-12-12"
+    },
+    {
+      "id": "03f3",
+      "name": "album237",
+      "date": "1999-12-12"
+    },
+    {
+      "id": "9bc2",
+      "name": "beach",
+      "date": "2000-12-12"
+    }
+  ],
+  "photos": [
+    {
+      "id": "101",
+      "albumId": "1",
+      "title": "Beach Sunset",
+      "description": "Sunset at the beach",
+      "file": "beach.jpg"
+    },
+    {
+      "id": "102",
+      "albumId": "2",
+      "title": "Birthday Cake",
+      "description": "The big birthday cake",
+      "file": "cake.jpg"
+    },
+    {
+      "id": "6c3a",
+      "description": "no",
+      "date": "1211-12-12",
+      "title": "Myphoto",
+      "albumId": "9bc2",
+      "file": "[ico56.jpg"
+    }
+  ]
+}

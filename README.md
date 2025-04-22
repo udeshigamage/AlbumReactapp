@@ -1,54 +1,59 @@
-# React + TypeScript + Vite
+Overview
+Album Gallery is a photo management web app where users can create albums, upload and view photos in a grid or slideshow. Users can also search for images from public APIs and insert them into albums. The app is built with React (TypeScript) and styled using Material UI, with modern tools for state management and data handling.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the React (TypeScript) frontend, built with Material UI, Redux, and TanStack Query.
 
-Currently, two official plugins are available:
+Tech Stack
+React (TypeScript) – UI Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Material UI (MUI) – Styling & Components
 
-## Expanding the ESLint configuration
+React Router – Navigation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Redux + Redux Persist – State Management & Persistence
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+TanStack Query (React Query) – Data Fetching & Caching
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Axios – API Requests
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+React Hook Form + Yup – Form Handling & Validation
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+LocalStorage – Persist photo references or temporary form states
+
+JSON Server – Mock API for albums and photos
+
+Features
+📁 Albums
+Create, edit & delete albums
+
+View albums in folder view or table view
+
+Split screen: album list on one side, selected album’s photos on the other
+
+Redux Persist stores album state across reloads
+
+🖼️ Photos
+Upload photos (file name only stored in JSON Server)
+
+View photos in grid layout or slideshow
+
+View photo metadata: title, description, album
+
+Add photos using validated form
+
+🔍 Search Integration
+Search and insert copyright-free images (e.g., Unsplash API)
+
+Add external images into existing albums
+
+✅ Form Validation
+Form input validated using Yup & React Hook Form
+
+Responsive UI & error handling
+
+🧠 State Management
+Redux used for global state (selected album, UI state, etc.)
+
+Redux Persist keeps albums and photos intact after reload
+
+TanStack Query handles data fetching & caching

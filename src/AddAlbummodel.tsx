@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Dialog,
   DialogTitle,
@@ -17,12 +17,8 @@ interface AddAlbumModelProps {
   handleClose: () => void;
 }
 const AddAlbumModal: React.FC<AddAlbumModelProps> = ({ open, handleClose }) => {
-  //const [isLoading, setIsLoading] = useState(false);
-
   const validationSchema = Yup.object({
     albumname: Yup.string().required("Album name is required"),
-    title: Yup.string().required("Title is required"),
-    date: Yup.date().required("Date is required"),
   });
 
   const addalbum = async (newalbum: any) => {
@@ -41,13 +37,12 @@ const AddAlbumModal: React.FC<AddAlbumModelProps> = ({ open, handleClose }) => {
       <DialogTitle>Create New Album</DialogTitle>
 
       <Formik
-        initialValues={{ albumname: "", title: "", date: "" }}
+        initialValues={{ albumname: "" }}
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
           try {
             const albumvalues = {
               name: values.albumname,
-              date: values.date,
             };
 
             await addalbummutation.mutate(albumvalues);
@@ -70,30 +65,6 @@ const AddAlbumModal: React.FC<AddAlbumModelProps> = ({ open, handleClose }) => {
                 onChange={handleChange}
                 error={touched.albumname && Boolean(errors.albumname)}
                 helperText={touched.albumname && errors.albumname}
-                margin="normal"
-              />
-
-              <TextField
-                fullWidth
-                name="title"
-                label="Title"
-                value={values.title}
-                onChange={handleChange}
-                error={touched.title && Boolean(errors.title)}
-                helperText={touched.title && errors.title}
-                margin="normal"
-              />
-
-              <TextField
-                fullWidth
-                name="date"
-                label="Date"
-                type="date"
-                value={values.date}
-                onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
-                error={touched.date && Boolean(errors.date)}
-                helperText={touched.date && errors.date}
                 margin="normal"
               />
             </DialogContent>

@@ -9,10 +9,12 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddAlbummodel from "./AddAlbummodel";
 import AddPhotomodel from "./AddPhotomodel";
 import axios from "axios";
+import moment from "moment";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface Album {
@@ -198,11 +200,15 @@ function Rootcomponent() {
                       }}
                     />
                     <Box sx={{ p: 2 }}>
-                      <Typography variant="subtitle1" fontWeight={600}>
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={600}
+                        color={"black"}
+                      >
                         {photo.name}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        📅 {photo.date}
+                        📅 {moment(photo.date).format("MMMM Do YYYY")}
                       </Typography>
                     </Box>
                   </Box>
@@ -218,7 +224,7 @@ function Rootcomponent() {
         open={isAlbumAddmodelopen}
         handleClose={() => {
           setAlbumAddmodelopen(false);
-          refetchAlbums(); // Refetch albums after modal close
+          refetchAlbums();
         }}
       />
       <AddPhotomodel
@@ -228,7 +234,7 @@ function Rootcomponent() {
           setPhotoAddmodelopen(false);
           queryClient.invalidateQueries({
             queryKey: ["photos", selectedAlbumId],
-          }); // Refresh photos
+          });
         }}
       />
     </>

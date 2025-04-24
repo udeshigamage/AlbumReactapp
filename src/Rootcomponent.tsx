@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import AddAlbummodel from "./AddAlbummodel";
 import AddPhotomodel from "./AddPhotomodel";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface Album {
   id: string;
@@ -23,66 +23,57 @@ interface Album {
 interface Photo {
   id: string;
   name: string;
+  url: string;
   date: string;
 }
 
 function Rootcomponent() {
+  const queryClient = useQueryClient();
+
   const [isAlbumAddmodelopen, setAlbumAddmodelopen] = useState(false);
   const [isPhotoAddmodelopen, setPhotoAddmodelopen] = useState(false);
-  const [albums_, setAlbums] = useState<Album[]>([]);
-  const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(null);
-  const [loadingAlbums_, setLoadingAlbums] = useState(false);
-  const [loadingPhotos, setLoadingPhotos] = useState(false);
 
-  const fetchAlbums = async () => {
-    setLoadingAlbums(true);
-
-    try {
-      const response = await axios.get("http://localhost:3001/albums"); // Replace with your API
-      setAlbums(response.data);
-      return response.data;
-      console.log(albums);
-    } catch (err) {
-      console.error("Failed to fetch albums");
-    } finally {
-      setLoadingAlbums(false);
-    }
+  // Fetch Albums
+  const fetchAlbums = async (): Promise<Album[]> => {
+    const response = await axios.get("http://localhost:3001/albums");
+    return response.data;
   };
-
+  const fetchimages = async () => {
+    await axios.get("https://unsplash.com/developers");
+  };
   const {
-    data: albums,
-    error,
+    data: albums = [],
     isLoading: loadingAlbums,
+    error: albumsError,
+    refetch: refetchAlbums,
   } = useQuery({
     queryKey: ["albums"],
     queryFn: fetchAlbums,
   });
 
-  const fetchPhotos = async (albumId: string) => {
-    setLoadingPhotos(true);
-    try {
-      const response = await axios.get(
-        `http://localhost:3001/photos?albumId=${albumId}`
-      );
-      setPhotos(response.data);
-    } catch (err) {
-      console.error("Failed to fetch photos");
-    } finally {
-      setLoadingPhotos(false);
-    }
+  // Fetch Photos of selected album
+  const fetchPhotos = async (albumId: string): Promise<Photo[]> => {
+    const response = await axios.get(
+      `http://localhost:3001/photos?albumId=${albumId}`
+    );
+    return response.data;
   };
 
-  useEffect(() => {
-    if (selectedAlbumId) {
-      fetchPhotos(selectedAlbumId);
-    }
-  }, [selectedAlbumId]);
-
+  const {
+    data: queriedPhotos = [],
+    isLoading: loadingPhotos,
+    error: photosError,
+  } = useQuery({
+    queryKey: ["photos", selectedAlbumId],
+    queryFn: () => fetchPhotos(selectedAlbumId!),
+    enabled: !!selectedAlbumId,
+  });
+  useEffect(() => {});
   return (
     <Box>
       <Grid container height="100vh">
-        {/* Left Panel */}
+        {/* Left Panel - Albums */}
         <Grid item xs={3} sx={{ borderRight: "1px solid #ccc", p: 2 }}>
           <Typography variant="h6" gutterBottom>
             Albums
@@ -99,9 +90,11 @@ function Rootcomponent() {
             <Box display="flex" justifyContent="center" mt={2}>
               <CircularProgress size={24} />
             </Box>
+          ) : albumsError ? (
+            <Typography color="error">Failed to load albums</Typography>
           ) : (
             <List dense sx={{ mt: 2 }}>
-              {albums.map((album: any) => (
+              {albums.map((album) => (
                 <ListItem key={album.id} disablePadding>
                   <ListItemButton
                     selected={selectedAlbumId === album.id}
@@ -115,7 +108,7 @@ function Rootcomponent() {
           )}
         </Grid>
 
-        {/* Right Panel */}
+        {/* Right Panel - Photos */}
         <Grid item xs={9} sx={{ p: 3 }}>
           <Box
             display="flex"
@@ -129,7 +122,7 @@ function Rootcomponent() {
             <Button
               variant="contained"
               onClick={() => setPhotoAddmodelopen(true)}
-              disabled={!selectedAlbumId}
+              // disabled={!selectedAlbumId}
             >
               Add Photo
             </Button>
@@ -139,30 +132,28 @@ function Rootcomponent() {
             <Box display="flex" justifyContent="center" mt={4}>
               <CircularProgress size={28} />
             </Box>
-          ) : photos.length === 0 ? (
+          ) : photosError ? (
+            <Typography color="error">Failed to load photos</Typography>
+          ) : queriedPhotos.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
               {selectedAlbumId ? "No photos found in this album." : ""}
             </Typography>
           ) : (
             <Grid container spacing={2}>
-              {/* {photos.map((photo) => (
+              {queriedPhotos.map((photo) => (
                 <Grid item key={photo.id} xs={12} sm={6} md={4}>
                   <Box
-                    sx={{
-                      p: 2,
-                      border: "1px solid #ccc",
-                      borderRadius: 2,
-                      height: "100%",
-                      backgroundColor: "#fafafa",
-                    }}
-                  >
-                    <Typography variant="subtitle1" fontWeight={600}>
-                      📸 {photo.name}
-                    </Typography>
-                    <Typography variant="caption">📅 {photo.date}</Typography>
-                  </Box>
+                    component="img"
+                    src={photo.url}
+                    alt={photo.name}
+                    sx={{ width: "100%", borderRadius: 1, mb: 1 }}
+                  />
+                  <Typography variant="subtitle1" fontWeight={600}>
+                    {photo.name}
+                  </Typography>
+                  <Typography variant="caption">📅 {photo.date}</Typography>
                 </Grid>
-              ))} */}
+              ))}
             </Grid>
           )}
         </Grid>
@@ -173,7 +164,7 @@ function Rootcomponent() {
         open={isAlbumAddmodelopen}
         handleClose={() => {
           setAlbumAddmodelopen(false);
-          fetchAlbums();
+          refetchAlbums(); // Refetch albums after modal close
         }}
       />
       <AddPhotomodel
@@ -181,7 +172,9 @@ function Rootcomponent() {
         selectedalbumid={selectedAlbumId}
         handleClose={() => {
           setPhotoAddmodelopen(false);
-          if (selectedAlbumId) fetchPhotos(selectedAlbumId);
+          queryClient.invalidateQueries({
+            queryKey: ["photos", selectedAlbumId],
+          }); // Refresh photos
         }}
       />
     </Box>

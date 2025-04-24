@@ -1,59 +1,47 @@
-Overview
-Album Gallery is a photo management web app where users can create albums, upload and view photos in a grid or slideshow. Users can also search for images from public APIs and insert them into albums. The app is built with React (TypeScript) and styled using Material UI, with modern tools for state management and data handling.
+# 📸 Album Gallery App
 
-This repository contains the React (TypeScript) frontend, built with Material UI, Redux, and TanStack Query.
+A modern, responsive album gallery built with React and TypeScript. Users can browse albums, add and add photos
 
-Tech Stack
-React (TypeScript) – UI Development
+---
 
-Material UI (MUI) – Styling & Components
+## 🚀 Features
 
-React Router – Navigation
+- 🗂️ View albums and their photos
+- ➕ Add new photos to albums
+- 🔁 Persist state with Redux Persist
+- ⚡ Efficient data fetching and caching with TanStack Query
+- 🎨 Clean UI with Material UI
+- ✅ Form validation using Formik and Yup
+- 📅 Human-readable date formatting with Moment.js
 
-Redux + Redux Persist – State Management & Persistence
 
-TanStack Query (React Query) – Data Fetching & Caching
+---
 
-Axios – API Requests
+## 🛠️ Tech Stack
 
-React Hook Form + Yup – Form Handling & Validation
+- **Frontend**: React, TypeScript, Material UI
+- **State Management**: Redux Toolkit, Redux Persist
+- **Data Fetching**: TanStack Query (React Query)
+- **Form Handling**: Formik
+- **Validation**: Yup
+- **Mock API**: JSON Server / local data
 
-LocalStorage – Persist photo references or temporary form states
+---
+## 📦 Installation
 
-JSON Server – Mock API for albums and photos
+# Install dependencies
+npm install
 
-Features
-📁 Albums
-Create, edit & delete albums
 
-View albums in folder view or table view
+## 🔐 Environment Variables
 
-Split screen: album list on one side, selected album’s photos on the other
+To fetch images from Unsplash, you need to set up an environment file.
 
-Redux Persist stores album state across reloads
+1. Create a `.env` file in the root directory.
+2. Add your Unsplash Access Key:
 
-🖼️ Photos
-Upload photos (file name only stored in JSON Server)
+```env
+VITE_UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
 
-View photos in grid layout or slideshow
 
-View photo metadata: title, description, album
 
-Add photos using validated form
-
-🔍 Search Integration
-Search and insert copyright-free images (e.g., Unsplash API)
-
-Add external images into existing albums
-
-✅ Form Validation
-Form input validated using Yup & React Hook Form
-
-Responsive UI & error handling
-
-🧠 State Management
-Redux used for global state (selected album, UI state, etc.)
-
-Redux Persist keeps albums and photos intact after reload
-
-TanStack Query handles data fetching & caching

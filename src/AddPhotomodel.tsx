@@ -10,6 +10,9 @@ import {
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import SearchPhotoForm from "./SearchphotoForm";
+import { addPhoto } from "./Reduxstore/PhotoSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./Reduxstore/Store";
 
 interface AddPhotomodelProps {
   open: boolean;
@@ -23,7 +26,7 @@ function AddPhotomodel({
   selectedalbumid,
 }: AddPhotomodelProps) {
   const queryClient = useQueryClient();
-
+  const dispatch = useDispatch<AppDispatch>();
   const handlePhotoInsert = async (photo: {
     id: string;
     name: string;
@@ -35,6 +38,8 @@ function AddPhotomodel({
         ...photo,
         albumId: selectedalbumid,
       });
+
+      dispatch(addPhoto({ ...photo, albumId: selectedalbumid ?? "" }));
 
       // Refresh photos in the album
       queryClient.invalidateQueries({ queryKey: ["photos", selectedalbumid] });

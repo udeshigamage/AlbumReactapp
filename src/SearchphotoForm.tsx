@@ -58,7 +58,6 @@ function SearchPhotoForm({
               name="query"
               label="Search Unsplash Photos"
               fullWidth
-              //error={<ErrorMessage name="query" /> ? true : false}
               helperText={<ErrorMessage name="query" />}
             />
             <Button

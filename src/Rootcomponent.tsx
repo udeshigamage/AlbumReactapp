@@ -16,6 +16,8 @@ import axios from "axios";
 import moment from "moment";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "@reduxjs/toolkit/query";
 
 interface Album {
   id: string;
@@ -41,7 +43,8 @@ function Rootcomponent() {
     const response = await axios.get("http://localhost:3001/albums");
     return response.data;
   };
-
+  const album_from_store = useSelector((state: any) => state.album.albums); // retrieving data from redux store
+  const Photos_from_store = useSelector((state: any) => state.photo.photo);
   const {
     data: albums = [],
     isLoading: loadingAlbums,
@@ -111,7 +114,7 @@ function Rootcomponent() {
               <Typography color="error">Failed to load albums</Typography>
             ) : (
               <List dense>
-                {albums.map((album) => (
+                {albums.map((album: any) => (
                   <ListItem key={album.id} disablePadding>
                     <ListItemButton
                       selected={selectedAlbumId === album.id}

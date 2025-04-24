@@ -11,6 +11,9 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./Reduxstore/Store";
+import { addAlbum } from "./Reduxstore/Albumslice";
 
 interface AddAlbumModelProps {
   open: boolean;
@@ -20,9 +23,10 @@ const AddAlbumModal: React.FC<AddAlbumModelProps> = ({ open, handleClose }) => {
   const validationSchema = Yup.object({
     albumname: Yup.string().required("Album name is required"),
   });
-
+  const dispatch = useDispatch<AppDispatch>();
   const addalbum = async (newalbum: any) => {
     await axios.post(`http://localhost:3001/albums`, newalbum);
+    dispatch(addAlbum(newalbum)); //Added Albumdata Into redux store
   };
   const queryclient = useQueryClient();
   const addalbummutation = useMutation({

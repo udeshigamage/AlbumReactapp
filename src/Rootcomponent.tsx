@@ -39,9 +39,7 @@ function Rootcomponent() {
     const response = await axios.get("http://localhost:3001/albums");
     return response.data;
   };
-  const fetchimages = async () => {
-    await axios.get("https://unsplash.com/developers");
-  };
+
   const {
     data: albums = [],
     isLoading: loadingAlbums,
@@ -69,89 +67,145 @@ function Rootcomponent() {
     queryFn: () => fetchPhotos(selectedAlbumId!),
     enabled: !!selectedAlbumId,
   });
-  useEffect(() => {});
+
   return (
-    <Box>
-      <Grid container height="100vh">
+    <>
+      <Grid
+        container
+        sx={{ height: "100vh", minWidth: "100vw", overflow: "hidden" }}
+      >
         {/* Left Panel - Albums */}
-        <Grid item xs={3} sx={{ borderRight: "1px solid #ccc", p: 2 }}>
-          <Typography variant="h6" gutterBottom>
+        <Grid
+          item
+          xs={3}
+          sx={{
+            borderRight: "1px solid #e0e0e0",
+            p: 3,
+            bgcolor: "#f9f9f9",
+            display: "flex",
+            color: "black",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant="h5" fontWeight="bold" gutterBottom>
             Albums
           </Typography>
+
           <Button
             fullWidth
             variant="contained"
+            sx={{ borderRadius: 2, mb: 2 }}
             onClick={() => setAlbumAddmodelopen(true)}
           >
             Add Album
           </Button>
 
-          {loadingAlbums ? (
-            <Box display="flex" justifyContent="center" mt={2}>
-              <CircularProgress size={24} />
-            </Box>
-          ) : albumsError ? (
-            <Typography color="error">Failed to load albums</Typography>
-          ) : (
-            <List dense sx={{ mt: 2 }}>
-              {albums.map((album) => (
-                <ListItem key={album.id} disablePadding>
-                  <ListItemButton
-                    selected={selectedAlbumId === album.id}
-                    onClick={() => setSelectedAlbumId(album.id)}
-                  >
-                    <ListItemText primary={album.name} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          )}
+          <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+            {loadingAlbums ? (
+              <Box display="flex" justifyContent="center" mt={4}>
+                <CircularProgress size={24} />
+              </Box>
+            ) : albumsError ? (
+              <Typography color="error">Failed to load albums</Typography>
+            ) : (
+              <List dense>
+                {albums.map((album) => (
+                  <ListItem key={album.id} disablePadding>
+                    <ListItemButton
+                      selected={selectedAlbumId === album.id}
+                      onClick={() => setSelectedAlbumId(album.id)}
+                      sx={{
+                        borderRadius: 1,
+                        mb: 1,
+                        "&.Mui-selected": {
+                          bgcolor: "#1976d2",
+                          color: "#fff",
+                          "&:hover": { bgcolor: "#1565c0" },
+                        },
+                      }}
+                    >
+                      <ListItemText primary={album.name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            )}
+          </Box>
         </Grid>
 
         {/* Right Panel - Photos */}
-        <Grid item xs={9} sx={{ p: 3 }}>
+        <Grid
+          item
+          xs={9}
+          sx={{
+            p: 4,
+            overflowY: "auto",
+            bgcolor: "#ffffff",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            mb={2}
+            mb={3}
           >
-            <Typography variant="h6">
+            <Typography variant="h5" fontWeight="bold">
               {selectedAlbumId ? "Photos in Album" : "Select an Album"}
             </Typography>
             <Button
               variant="contained"
+              disabled={!selectedAlbumId}
               onClick={() => setPhotoAddmodelopen(true)}
-              // disabled={!selectedAlbumId}
+              sx={{ borderRadius: 2 }}
             >
               Add Photo
             </Button>
           </Box>
 
           {loadingPhotos ? (
-            <Box display="flex" justifyContent="center" mt={4}>
+            <Box display="flex" justifyContent="center" mt={6}>
               <CircularProgress size={28} />
             </Box>
           ) : photosError ? (
             <Typography color="error">Failed to load photos</Typography>
           ) : queriedPhotos.length === 0 ? (
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" color="text.secondary">
               {selectedAlbumId ? "No photos found in this album." : ""}
             </Typography>
           ) : (
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               {queriedPhotos.map((photo) => (
                 <Grid item key={photo.id} xs={12} sm={6} md={4}>
                   <Box
-                    component="img"
-                    src={photo.url}
-                    alt={photo.name}
-                    sx={{ width: "100%", borderRadius: 1, mb: 1 }}
-                  />
-                  <Typography variant="subtitle1" fontWeight={600}>
-                    {photo.name}
-                  </Typography>
-                  <Typography variant="caption">📅 {photo.date}</Typography>
+                    sx={{
+                      borderRadius: 2,
+                      overflow: "hidden",
+                      boxShadow: 1,
+                      bgcolor: "#fafafa",
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={photo.url}
+                      alt={photo.name}
+                      sx={{
+                        width: "100%",
+                        height: 200,
+                        objectFit: "cover",
+                        borderBottom: "1px solid #eee",
+                      }}
+                    />
+                    <Box sx={{ p: 2 }}>
+                      <Typography variant="subtitle1" fontWeight={600}>
+                        {photo.name}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        📅 {photo.date}
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Grid>
               ))}
             </Grid>
@@ -177,7 +231,7 @@ function Rootcomponent() {
           }); // Refresh photos
         }}
       />
-    </Box>
+    </>
   );
 }
 
